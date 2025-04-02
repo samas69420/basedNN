@@ -33,6 +33,7 @@ but also because i wanted a repo with simple and easily readable code to check w
 ## Usage
 the training could be started with:
 > ```bash  
+> cd src
 > python main.py   
 > ```
 
