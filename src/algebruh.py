@@ -142,6 +142,10 @@ def round_mat(X,n=2):
     return result
 
 
+def round_col(X,n=2):
+    return round_mat(X,n)
+
+
 def round_list(x_list,n=2):
     return [round(e,n) for e in x_list]
 

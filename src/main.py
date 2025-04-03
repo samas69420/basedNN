@@ -1,6 +1,6 @@
 import random
 from net import Network
-from algebruh import round_mat
+from algebruh import round_col
 from algebruh import round_list
 from algebruh import argmax_list
 
@@ -36,7 +36,7 @@ def input_function():
     returns x (the input) and y (the desired output for f(x))
 
     in this case the toy problem is to determine in which half of the input
-    vector the biggest element is so the x and y vectors will be built in the
+    list the biggest element is so the x and y lists will be built in the
     following way:
 
     x = [x1, ... ,x6] every x is randomly generated in the interval (0,1)
@@ -53,19 +53,18 @@ def input_function():
 
 
 def train_one_data_point(net, input_data, target):
-    prediction = net.forward(input_data)
+    net.forward(input_data)
     net.backward(target)
     net.update_weights()
-    return prediction 
 
 
-def test_n_samples(n):
+def test_n_samples(net, n):
     for _ in range(n):
         data = input_function()
-        print(round_mat(net.forward(data[0]),4),"-", data[1],"-",round_list(data[0]))
+        print("net output:",round_col(net.forward(data[0]),4),"- true output:", data[1],"- input:",round_list(data[0]))
 
 
-def print_training_stats(i):
+def print_training_stats(net, i):
     hit_ratio = 0
     for _ in range(100):
         data = input_function()
@@ -87,14 +86,11 @@ if __name__ == "__main__":
     for i in range(N_ITERATIONS):
 
         input_data, desired_output = input_function()
-        out = train_one_data_point(net, input_data, desired_output)
-
-        # quit if something explodes
-        [quit() if repr(e[0])=="nan" else None for e in out]
+        train_one_data_point(net, input_data, desired_output)
 
         if i % STATS_FREQ == 0:
-            print_training_stats(i)
+            print_training_stats(net, i)
 
     # test
-    test_n_samples(10)
+    test_n_samples(net, 10)
 

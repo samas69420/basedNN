@@ -77,6 +77,9 @@ class Network:
         # this will be needed in backprop
         self.last_input = x_col
 
+        # quit if something explodes
+        [quit() if repr(e[0])=="nan" else None for e in activations]
+
         return activations
 
 
