@@ -2,8 +2,14 @@
 in this file are implemented all the tensors operations but defined using 
 only python lists
 
-all "column" N-vector are treated as Nx1 matrixes
-all "row" N-vector are treated as 1xN matrixes
+all "column" N-vector are treated as Nx1 matrices
+all "row" N-vector are treated as 1xN matrices
+
+functions labeled as "dummy" are just a wrapper for more general functions,
+their purpose is only to help with readability such that the name of the
+function itself tells us if we are dealing for example with column vectors rather
+than row vectors even if in both cases the function for general matrices is used
+to perform the computation
 """ 
 
 import random
@@ -46,15 +52,9 @@ def element_wise_prod_list(x_list,y_list):
     return result
 
 
-# this function could be replaced by the more general element_wise_prod_mat 
-# function which works for both column and row vectors as they are treated as 
-# matrixes, but using this one when only column vectors are used can help with 
-# readability by highlighting the dimensionality of the input
+# dummy
 def element_wise_prod_col(x_col,y_col):
-    result = []
-    for i in range(len(x_col)):
-        result.append([x_col[i][0]*y_col[i][0]])
-    return result
+    return element_wise_prod_mat(x_col, y_col)
 
 
 def element_wise_prod_mat(X,Y):
@@ -102,6 +102,10 @@ def list_to_col(x_list):
     return [ [element] for element in x_list]
 
 
+def col_to_list(x_col):
+    return [e[0] for e in x_col]
+
+
 def scal_mat_mult(k, X):
     result = []
     for i in range(len(X)):
@@ -120,6 +124,11 @@ def mat_sub(X,Y):
             row.append(X[i][j]-Y[i][j]) 
         result.append(row)
     return result
+
+
+# dummy
+def col_sub(x_col,y_col):
+    return mat_sub(x_col,y_col) 
         
 
 def mat_add(X,Y):
@@ -130,6 +139,17 @@ def mat_add(X,Y):
             row.append(X[i][j]+Y[i][j]) 
         result.append(row)
     return result
+
+
+# dummy 
+def col_add(x_col,y_col):
+    return mat_add(x_col,y_col) 
+
+
+# not really dummy but almost
+def outer_product(x_col, y_col):
+    y_row = transpose(y_col)
+    return mat_mul(x_col, y_row)
 
 
 def round_mat(X,n=2):

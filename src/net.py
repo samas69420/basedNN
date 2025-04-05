@@ -58,6 +58,7 @@ class Network:
 
         x_col = list_to_col(x_list)
         activations = x_col
+
         self.activations.append(activations)
         self.weighted_input.append(0) # 0 is appended here only to adjust size 
 
@@ -67,7 +68,7 @@ class Network:
             b = self.bias[i]
 
             # compute the activations for the i-th layer
-            weighted_input = mat_add(mat_mul(W,activations),b)
+            weighted_input = col_add(mat_mul(W,activations), b)
             activations = f_col(weighted_input, self.f)
 
             # save the values computed for each layer
@@ -98,13 +99,14 @@ class Network:
         d = [[(self.activations[-1][i][0]-y_list[i])*(2/len(y_list))] for i in range(len(y_list))]
 
         # starting with the delta for the last layer
-        delta = element_wise_prod_col(d, f_col(self.weighted_input[-1], self.f_prime))
+        activations_prime = f_col(self.weighted_input[-1], self.f_prime)
+        delta = element_wise_prod_col(d, activations_prime)
 
         # compute gradients for hidden layers
         for i in reversed(range(self.n_layers-1)):
             
             # compute the gradients and save them in reverse order
-            grad = mat_mul(delta, transpose(self.activations[i]))
+            grad = outer_product(delta, self.activations[i])
             gradients_weights.append(grad)
             gradients_bias.append(delta)
 
@@ -138,11 +140,10 @@ class Network:
             self.weights[i] = new_W
 
             scaled_grad_b = scal_mat_mult(self.lr,self.gradients_b[i])
-            new_b = mat_sub(self.bias[i], scaled_grad_b)
+            new_b = col_sub(self.bias[i], scaled_grad_b)
             self.bias[i] = new_b
 
         # reset the lists of gradients
         self.gradients_w = []
         self.gradients_b = []
 
-        
