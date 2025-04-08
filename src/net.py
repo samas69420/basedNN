@@ -1,5 +1,5 @@
 from algebruh import * 
-
+import struct
 
 class Network:
     """
@@ -22,6 +22,7 @@ class Network:
         and the activation function (with its derivative)
         """
 
+        self.neurons_list = neurons_list
         self.n_layers = len(neurons_list)
         self.f = activation_function
         self.f_prime = activation_function_derivative
@@ -126,6 +127,7 @@ class Network:
         self.weighted_input = [] 
         self.activations = [] 
 
+
     def update_weights(self):
         """
         update all the learnable weights using the pure SGD algorithm: 
@@ -146,4 +148,90 @@ class Network:
         # reset the lists of gradients
         self.gradients_w = []
         self.gradients_b = []
+
+    
+    def create_weights_filename(self, basename = "weights", extension = "w"):
+        """
+        append the current architecture to the basename and return the result
+        for example if neurons_list = [6,50,50,2] and basename = weights:
+        (weights,w) -> weights_6_50_50_2.w
+        """ 
+
+        neurons_list_str = ""
+        for element in self.neurons_list:
+            neurons_list_str += f"_{element}"
+
+        formatted_filename = f"{basename}{neurons_list_str}.{extension}"
+        return formatted_filename 
+
+    
+    def save_weights(self, filename = None):
+        """
+        save weights in a binary format (double precision) in a file
+        if no filename is provided it will be generated automatically
+        """
+
+        if filename == None: 
+            filename = self.create_weights_filename()
+    
+        with open(filename,"wb") as f:
+            for i in range(len(self.neurons_list)-1):
+                for i_ in range(self.neurons_list[i+1]):
+                    for j_ in range(self.neurons_list[i]):
+                        f.write(struct.pack('>d',self.weights[i][i_][j_]))
+
+        return filename
+
+
+    def load_weights(self, filename):
+        """
+        load weights from an existing file
+
+        the architecture of the model when this function is used must be 
+        exactly the same as the one used to generate the file (without 
+        considering activation functions)
+        """
+
+        result = []
+
+        with open(filename,"rb") as f:
+            for i in range(len(self.neurons_list)-1):
+                matrix = []
+                for i_ in range(self.neurons_list[i+1]):
+                    row = []
+                    for j_ in range(self.neurons_list[i]):
+                        next_8_bytes = f.read(8)
+                        unpacked = struct.unpack('>d', next_8_bytes)[0]
+                        row.append(unpacked)
+                    matrix.append(row)
+                result.append(matrix)
+        
+        self.weights = result
+
+
+if __name__ == "__main__":
+
+    # test save and load weights, activation functions are not needed 
+
+    NETWORK_LAYERS = [2,3,2]
+    net = Network(NETWORK_LAYERS , None, None)
+
+    weights_file = net.save_weights("testweights.w")
+
+    print("saved weights in", weights_file,"\n")
+    print("first weight mat:")
+    [print(row) for row in round_mat(net.weights[0])]
+
+    print("\nresetting the net ...\n")
+    net = Network(NETWORK_LAYERS , None, None)
+
+    print("before loading\n")
+    print("first weight mat:")
+    [print(row) for row in round_mat(net.weights[0])]
+
+    net.load_weights("testweights.w")
+
+    print("\nafter loading\n")
+    print("first weight mat:")
+    [print(row) for row in round_mat(net.weights[0])]
 

@@ -9,7 +9,12 @@ from algebruh import col_to_list
 LEARNING_RATE = 0.001
 NETWORK_LAYERS = [6,50,50,2]
 N_ITERATIONS = 500_000
+
 PRINT_STATS_FREQ = 10_000
+SAVE_WEIGHTS_FREQ = 50_000
+
+LOAD_EXISTING_WEIGHTS = True
+EXISTING_WEIGHTS_FILE = "weights_6_50_50_2.w" 
 
 
 def train_one_data_point(net, input_data, target):
@@ -57,14 +62,26 @@ if __name__ == "__main__":
 
     net = Network(NETWORK_LAYERS , lRelu, lRelu_prime, lr = LEARNING_RATE)
 
+    if LOAD_EXISTING_WEIGHTS:
+        print("loading weights from:",EXISTING_WEIGHTS_FILE)
+        try:
+            net.load_weights(EXISTING_WEIGHTS_FILE) 
+        except FileNotFoundError:
+            print(f"{EXISTING_WEIGHTS_FILE} not found")
+            print("the weights file will be created automatically during train") 
+
     # training loop
-    for i in range(N_ITERATIONS):
+    for i in range(1,N_ITERATIONS+1):
 
         input_data, desired_output = input_function()
         train_one_data_point(net, input_data, desired_output)
 
         if i % PRINT_STATS_FREQ == 0:
             print_training_stats(net, i)
+
+        if i % SAVE_WEIGHTS_FREQ == 0:
+            weights_file = net.save_weights()
+            print("saved weights into:", weights_file)
 
     # test
     test_accuracy = test_n_samples(net, 10, verbose = True)
