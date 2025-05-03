@@ -12,7 +12,7 @@ built with nothing but grit, tears, and raw Python \
 ---
 
 ## Why?  
-*"Why build a neural network from scratch in 2025?"*
+*"Why build neural networks from scratch in 2025?"*
 
 Because libraries are for the weak 🗿 
 
@@ -33,8 +33,8 @@ but also because i wanted a repo with simple and easily readable code to check w
 ## Usage
 the training could be started with:
 > ```bash  
-> cd src
-> python main.py   
+> cd mlp/src
+> python src/main.py   
 > ```
 
 the hyperparameters like learning rate and network architecture can be modified in ```main.py```
@@ -50,7 +50,8 @@ the hyperparameters like learning rate and network architecture can be modified 
 ---
 
 ## Ze math
-![](backprop.jpg?raw=true)
+![](mlp/backprop.jpg?raw=true)
+![](lstm/bpttlstm.jpg?raw=true)
 
 ###### for more information about the notation: https://robotchinwag.com/posts/the-tensor-calculus-you-need-for-deep-learning/
 

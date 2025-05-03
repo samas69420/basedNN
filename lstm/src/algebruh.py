@@ -75,6 +75,11 @@ def random_matrix(h,w, range_=[-1,1]):
     return result
 
 
+# dummy
+def random_col(size):
+    return random_matrix(size,1)
+
+
 def random_int_matrix(h,w, range_=[0,10]):
     result = []
     for _ in range(h):
@@ -89,6 +94,11 @@ def zero_matrix(h,w):
         row = [0 for i in range(w)]
         result.append(row)
     return result
+
+
+# dummy
+def zero_col(size):
+    return zero_matrix(size,1)
 
 
 def f_col(x_col, f):
@@ -116,6 +126,11 @@ def scal_mat_mult(k, X):
     return result
 
 
+# dummy
+def scal_col_mult(k, X):
+    return scal_mat_mult(k,X)
+
+
 def mat_sub(X,Y):
     result = []
     for i in range(len(X)):
@@ -138,6 +153,18 @@ def mat_add(X,Y):
         for j in range(len(X[0])):
             row.append(X[i][j]+Y[i][j]) 
         result.append(row)
+    return result
+
+
+# dummy
+def col_add(x_col,y_col):
+    return mat_add(x_col,y_col) 
+
+
+def multi_mat_add(mat_list):
+    result = zero_matrix(len(mat_list[0]),len(mat_list[0][0]))
+    for element in mat_list:
+        result = mat_add(result, element)
     return result
 
 
