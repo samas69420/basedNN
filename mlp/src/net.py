@@ -34,7 +34,7 @@ class Network:
         self.bias = []
         for i in range(self.n_layers-1):
             self.weights.append(random_matrix(neurons_list[i+1], neurons_list[i]))
-            self.bias.append(random_matrix(neurons_list[i+1], 1))
+            self.bias.append(random_col(neurons_list[i+1]))
 
         # these will be created and filled in forward and backward
         # they are included here only for readability
@@ -141,7 +141,7 @@ class Network:
             new_W = mat_sub(self.weights[i], scaled_grad_w)
             self.weights[i] = new_W
 
-            scaled_grad_b = scal_mat_mult(self.lr,self.gradients_b[i])
+            scaled_grad_b = scal_col_mult(self.lr,self.gradients_b[i])
             new_b = col_sub(self.bias[i], scaled_grad_b)
             self.bias[i] = new_b
 
