@@ -1,6 +1,7 @@
 from algebruh import *
 import math
 
+
 tanh = lambda x : math.tanh(x)
 tanh_prime = lambda x : 1-(tanh(x)**2)
 sigmoid = lambda x : 1/(1+math.exp(-x))
@@ -288,7 +289,7 @@ class LSTM:
         self.init_log_lists()
 
 
-    def update_params(self):
+    def update_weights(self):
 
         self.W_fx = mat_sub(self.W_fx, scal_mat_mult(self.lr, self.d_W_fx))
         self.W_fh = mat_sub(self.W_fh, scal_mat_mult(self.lr, self.d_W_fh))
@@ -302,7 +303,7 @@ class LSTM:
 
         self.W_gx = mat_sub(self.W_gx, scal_mat_mult(self.lr, self.d_W_gx))
         self.W_gh = mat_sub(self.W_gh, scal_mat_mult(self.lr, self.d_W_gh))
-        self.b_g  = mat_sub(self.b_g , scal_col_mult(self.lr, self.d_b_g ))
+        self.b_g  = col_sub(self.b_g , scal_col_mult(self.lr, self.d_b_g ))
 
         self.W_ox = mat_sub(self.W_ox, scal_mat_mult(self.lr, self.d_W_ox))
         self.W_oh = mat_sub(self.W_oh, scal_mat_mult(self.lr, self.d_W_oh))

@@ -4,7 +4,9 @@ from lstm import LSTM
 INPUT_SIZE = 3
 STATE_SIZE = 2
 OUTPUT_SIZE = 3
-TRAIN_ITERATIONS = 100000
+LEARNING_RATE = 0.01
+
+N_ITERATIONS = 100000
 
 input_sequence = [[[0.1],
                    [0.2],
@@ -30,7 +32,7 @@ target_sequence = [[[2],
                     [3],
                     [3]]]
 
-lstm = LSTM(INPUT_SIZE,STATE_SIZE,OUTPUT_SIZE)
+lstm = LSTM(INPUT_SIZE,STATE_SIZE,OUTPUT_SIZE,LEARNING_RATE)
 
 h_bar = random_col(STATE_SIZE)
 c_bar = random_col(STATE_SIZE)
@@ -44,14 +46,14 @@ for i,element in enumerate(target_sequence):
 lstm.backward(target_sequence)
         
 
-for iteration in range(TRAIN_ITERATIONS):
+for iteration in range(N_ITERATIONS):
     h,c = h_bar, c_bar
     for i,element in enumerate(target_sequence):
         x = input_sequence[i]
         y,h,c = lstm.forward(x,h,c)
     lstm.backward(target_sequence)
-    lstm.update_params()
-    if iteration % (TRAIN_ITERATIONS/10) == 0:
+    lstm.update_weights()
+    if iteration % (N_ITERATIONS/10) == 0:
         print(iteration)
 
 
