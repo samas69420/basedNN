@@ -1,6 +1,6 @@
 # basedNN
 
-### Yet another fully-connected feedforward neural network implementation from scratch
+### Yet another collection of neural networks implementations from scratch
 
 built with nothing but grit, tears, and raw Python \
 (using python lists as tensors 💀)
@@ -21,8 +21,6 @@ but also because i wanted a repo with simple and easily readable code to check w
 ---
 
 ## Features
-- ✅ **Custom activation function**: just define your favorite f:R -> R (and its derivative) in main.py and pass them to the net constructor as arguments
-- ✅ **Custom MLP architecture**: change the NETWORK\_LAYERS list in main.py specifying how many layers and how many neurons per layer should be used
 - ✅ **No external libraries**: not even NumPy, we do matrix math like it’s 1998  
 - ✅ **Artisanal backpropagation**: 100% gluten free handcrafted gradients  
 - ✅ **Readability**: so simple, even your toaster could understand it  
@@ -31,13 +29,15 @@ but also because i wanted a repo with simple and easily readable code to check w
 ---
 
 ## Usage
-the training could be started with:
+to start training an architecture cd into its directory and from there run the main.py in src forlder
+for example if you want to test the mlp:
 > ```bash  
-> cd mlp/src
+> git clone https://github.com/samas69420/basedNN
+> cd basedNN/mlp
 > python src/main.py   
 > ```
 
-the hyperparameters like learning rate and network architecture can be modified in ```main.py```
+the hyperparameters like learning rate, network layers etc can be modified in ```main.py```
 
 ---
 
