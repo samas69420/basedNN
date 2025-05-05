@@ -17,11 +17,11 @@ class LSTM:
         self.input_size = input_size
         self.output_size = output_size
         self.lr = lr
-        self.init_params()
+        self.init_weights()
         self.init_log_lists()
 
 
-    def init_params(self):
+    def init_weights(self):
 
         self.W_fx = random_matrix(self.state_size,self.input_size)
         self.W_fh = random_matrix(self.state_size,self.state_size)
@@ -51,6 +51,8 @@ class LSTM:
         list of variables to record in every timestep during forward cause
         they are needed for backward, the first element of each list
         represents the value at timestep "-1" (the initialization value)
+        this function should be called before every first forward of a new
+        sequence
         """
 
         self.h_log = [None]
@@ -77,30 +79,31 @@ class LSTM:
 
         self.d_W_fx = zero_matrix(len(self.W_fx),len(self.W_fx[0]))
         self.d_W_fh = zero_matrix(len(self.W_fh),len(self.W_fh[0]))
-        self.d_p_f = zero_matrix(len(self.p_f),1)
-        self.d_b_f = zero_matrix(len(self.b_f),1)
+        self.d_p_f = zero_col(len(self.p_f))
+        self.d_b_f = zero_col(len(self.b_f))
 
         self.d_W_ix = zero_matrix(len(self.W_fx),len(self.W_fx[0]))
         self.d_W_ih = zero_matrix(len(self.W_fh),len(self.W_fh[0]))
-        self.d_p_i = zero_matrix(len(self.p_f),1)
-        self.d_b_i = zero_matrix(len(self.b_f),1)
+        self.d_p_i = zero_col(len(self.p_f))
+        self.d_b_i = zero_col(len(self.b_f))
 
         self.d_W_gx = zero_matrix(len(self.W_fx),len(self.W_fx[0]))
         self.d_W_gh = zero_matrix(len(self.W_fh),len(self.W_fh[0]))
-        self.d_b_g = zero_matrix(len(self.b_f),1)
+        self.d_b_g = zero_col(len(self.b_f))
 
         self.d_W_ox = zero_matrix(len(self.W_fx),len(self.W_fx[0]))
         self.d_W_oh = zero_matrix(len(self.W_fh),len(self.W_fh[0]))
-        self.d_p_o = zero_matrix(len(self.p_f),1)
-        self.d_b_o = zero_matrix(len(self.b_f),1)
+        self.d_p_o = zero_col(len(self.p_f))
+        self.d_b_o = zero_col(len(self.b_f))
 
         self.d_W_y = zero_matrix(len(self.W_y),len(self.W_y[0]))
-        self.d_b_y = zero_matrix(len(self.b_y),1)
+        self.d_b_y = zero_col(len(self.b_y))
 
 
     def forward(self, x,h,c):
 
         # if this is the first forward of the sequence save init values for h/c
+
         if self.h_log[-1] == None and self.c_log[-1] == None:
             self.h_log[0] = h # h_bar
             self.c_log[0] = c # c_bar
@@ -146,17 +149,17 @@ class LSTM:
         perform the bptt for the entire target sequence assuming the MSE loss
         """
 
-        # initialize all the total gradient to 0
+        # initialize all the total gradients to 0
         self.init_total_derivatives()
 
         # set the derivatives for the last part of the sequence to 0
         # since for the last element F_t_plus_1 and other gates do not exist
-        d_z_F_t_plus_1 = zero_matrix(self.state_size,1)
-        d_z_I_t_plus_1 = zero_matrix(self.state_size,1)
-        d_z_G_t_plus_1 = zero_matrix(self.state_size,1)
-        d_z_O_t_plus_1 = zero_matrix(self.state_size,1)
-        d_c_t_plus_1 = zero_matrix(self.state_size,1)
-        self.F_log.append(zero_matrix(self.state_size,1))
+        d_z_F_t_plus_1 = zero_col(self.state_size)
+        d_z_I_t_plus_1 = zero_col(self.state_size)
+        d_z_G_t_plus_1 = zero_col(self.state_size)
+        d_z_O_t_plus_1 = zero_col(self.state_size)
+        d_c_t_plus_1 = zero_col(self.state_size)
+        self.F_log.append(zero_col(self.state_size))
 
         # bptt
         # t stops at 1 because the elements of index 0 in the log lists

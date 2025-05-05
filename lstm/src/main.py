@@ -44,8 +44,8 @@ for i,element in enumerate(target_sequence):
     y,h,c = lstm.forward(x,h,c)
     print(y)
 
-# call to backward because it also clears the log lists from previous forwards
-lstm.backward(target_sequence)
+# clear the log lists from previous forwards
+lstm.init_log_lists()
 
 
 print("training...")
@@ -77,4 +77,3 @@ for i,element in enumerate(target_sequence):
 
 # input_sequence = [[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]]]
 # target_sequence = [[[6]],[[9]],[[4]],[[20]],[[13]],[[15]],[[7]],[[7]],[[7]],[[8]],[[8]],[[8]]]
-
