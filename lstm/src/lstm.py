@@ -50,7 +50,7 @@ class LSTM:
         """
         list of variables to record in every timestep during forward cause
         they are needed for backward, the first element of each list
-        represents the value of timestep "-1" (the initialization value)
+        represents the value at timestep "-1" (the initialization value)
         """
 
         self.h_log = [None]
@@ -160,8 +160,7 @@ class LSTM:
 
         # bptt
         # t stops at 1 because the elements of index 0 in the log lists
-        # corresponds to values at timestep "-1", in other words they 
-        # are the initialization values
+        # corresponds to values at timestep "-1"
         for t in reversed(range(1,len(target_seq)+1)):
 
             # pick the values for the current timestep from log lists
@@ -184,19 +183,19 @@ class LSTM:
 
             x_t = self.x_log[t]
 
-            # derivative of loss w.r.t. output t
+            # derivative of loss w.r.t. output at timestep t
 
             d_y_t = []
             for i in range(self.output_size):
                 d_y_t.append([y_hat_t[i][0]-target_seq[t-1][i][0]])
             d_y_t = scal_mat_mult(2/self.output_size, d_y_t)
 
-            # derivative of loss w.r.t. final output layer weights 
+            # derivative of loss w.r.t. weights of final output layer
 
             d_W_y_t = outer_product(d_y_t,h_t)
             d_b_y_t = d_y_t
             
-            # derivative of loss w.r.t. ht
+            # derivative of loss w.r.t. h_t
 
             d_h_t = multi_mat_add( (mat_mul(transpose(self.W_y), d_y_t),
                                     mat_mul(transpose(self.W_fh), d_z_F_t_plus_1),
@@ -204,7 +203,7 @@ class LSTM:
                                     mat_mul(transpose(self.W_gh), d_z_G_t_plus_1),
                                     mat_mul(transpose(self.W_oh), d_z_O_t_plus_1)) )
             
-            # derivative of loss w.r.t. zOt
+            # derivative of loss w.r.t. weighted input to output gate
 
             d_z_O_t = element_wise_prod_col(element_wise_prod_col(d_h_t,f_col(c_t,tanh)),f_col(z_o_t,sigmoid_prime))
             
@@ -216,7 +215,7 @@ class LSTM:
                                     element_wise_prod_col(d_c_t_plus_1, F_t_plus_1),
                                     element_wise_prod_col(element_wise_prod_col(d_h_t, O_t), f_col(c_t, tanh_prime))) )
             
-            # derivative of loss w.r.t. weighted inputs to "forget/input/g" gates 
+            # derivative of loss w.r.t. weighted input to forget/input/g gates 
 
             d_z_F_t = element_wise_prod_col(element_wise_prod_col(d_c_t, c_t_minus_1),f_col(z_f_t, sigmoid_prime))
             d_z_I_t = element_wise_prod_col(element_wise_prod_col(d_c_t, G_t),f_col(z_i_t, sigmoid_prime))
@@ -224,27 +223,27 @@ class LSTM:
             
             # params
             
-            # derivative of loss w.r.t. parameters of forget gate at timestep t
+            # derivative of loss w.r.t. weights of forget gate at timestep t
 
             d_W_fx_t = outer_product(d_z_F_t, x_t)
             d_W_fh_t = outer_product(d_z_F_t, h_t_minus_1)
             d_p_f_t = element_wise_prod_col(d_z_F_t, c_t_minus_1)
             d_b_f_t = d_z_F_t
             
-            # derivative of loss w.r.t. parameters of input gate at timestep t
+            # derivative of loss w.r.t. weights of input gate at timestep t
 
             d_W_ix_t = outer_product(d_z_I_t, x_t)
             d_W_ih_t = outer_product(d_z_I_t, h_t_minus_1)
             d_p_i_t = element_wise_prod_col(d_z_I_t, c_t_minus_1)
             d_b_i_t = d_z_I_t
             
-            # derivative of loss w.r.t. parameters of g gate at timestep t
+            # derivative of loss w.r.t. weights of g gate at timestep t
 
             d_W_gx_t = outer_product(d_z_G_t, x_t)
             d_W_gh_t = outer_product(d_z_G_t, h_t_minus_1)
             d_b_g_t = d_z_G_t
             
-            # derivative of loss w.r.t. parameters of output gate at timestep t
+            # derivative of loss w.r.t. weights of output gate at timestep t
 
             d_W_ox_t = outer_product(d_z_O_t, x_t)
             d_W_oh_t = outer_product(d_z_O_t, h_t_minus_1)
@@ -260,7 +259,7 @@ class LSTM:
                           
             d_c_t_plus_1 = d_c_t
 
-            # add contribution of timestep t to total derivative
+            # add contribution of timestep t to total derivatives
 
             self.d_W_fx = mat_add(self.d_W_fx, d_W_fx_t)
             self.d_W_fh = mat_add(self.d_W_fh, d_W_fh_t)

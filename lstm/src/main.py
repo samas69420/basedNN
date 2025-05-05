@@ -43,9 +43,12 @@ for i,element in enumerate(target_sequence):
     x = input_sequence[i]
     y,h,c = lstm.forward(x,h,c)
     print(y)
-lstm.backward(target_sequence)
-        
 
+# call to backward because it also clears the log lists from previous forwards
+lstm.backward(target_sequence)
+
+
+print("training...")
 for iteration in range(N_ITERATIONS):
     h,c = h_bar, c_bar
     for i,element in enumerate(target_sequence):
