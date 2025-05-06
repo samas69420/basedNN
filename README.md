@@ -29,12 +29,12 @@ but also because i wanted a repo with simple and easily readable code to check w
 ---
 
 ## Usage
-to start training an architecture cd into its directory and from there run the main.py in src forlder
-for example if you want to test the mlp:
+to start training an architecture cd into its directory and from there run the main.py in src folder
+for example to test the mlp:
 > ```bash  
-> git clone https://github.com/samas69420/basedNN
-> cd basedNN/mlp
-> python src/main.py   
+>$ git clone https://github.com/samas69420/basedNN
+>$ cd basedNN/mlp
+>$ python src/main.py   
 > ```
 
 the hyperparameters like learning rate, network layers etc can be modified in ```main.py```
