@@ -52,6 +52,7 @@ the hyperparameters like learning rate, network layers etc can be modified in ``
 ## Ze math
 ![](mlp/backprop.jpg?raw=true)
 ![](lstm/bpttlstm.jpg?raw=true)
+![](cnn/bpconv.jpg?raw=true)
 
 ###### for more information about the notation: https://robotchinwag.com/posts/the-tensor-calculus-you-need-for-deep-learning/
 
