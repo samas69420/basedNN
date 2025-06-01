@@ -77,3 +77,7 @@ for i,element in enumerate(target_sequence):
 
 # input_sequence = [[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]],[[0]]]
 # target_sequence = [[[6]],[[9]],[[4]],[[20]],[[13]],[[15]],[[7]],[[7]],[[7]],[[8]],[[8]],[[8]]]
+
+# TODO 
+# add save/load weights feature
+# compute and return the gradient also for input

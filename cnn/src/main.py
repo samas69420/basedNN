@@ -69,4 +69,5 @@ if __name__ == "__main__":
 # add support to variable stride
 # add support to pooling layers (maxpool, meanpool)
 # improve the logs during training and test
+# add save/load weights feature
         

@@ -87,3 +87,5 @@ if __name__ == "__main__":
     test_accuracy = test_n_samples(net, 10, verbose = True)
     print("final accuracy:", test_accuracy)
 
+# TODO
+# make a modular version of the mlp (linear layer class)
