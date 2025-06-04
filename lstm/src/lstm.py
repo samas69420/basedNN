@@ -99,8 +99,6 @@ class LSTM:
         self.d_W_y = zero_matrix(len(self.W_y),len(self.W_y[0]))
         self.d_b_y = zero_col(len(self.b_y))
 
-        self.d_x = zero_col(self.input_size)
-
 
     def forward(self, x,h,c):
 
@@ -294,8 +292,6 @@ class LSTM:
 
             self.d_W_y  = mat_add(self.d_W_y, d_W_y_t)
             self.d_b_y  = col_add(self.d_b_y, d_b_y_t)
-
-            self.d_x  = col_add(self.d_x, d_x_t)
 
         # now that the gradients for the whole sequence have been computed the 
         # logs can be deleted
