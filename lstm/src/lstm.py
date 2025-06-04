@@ -99,6 +99,8 @@ class LSTM:
         self.d_W_y = zero_matrix(len(self.W_y),len(self.W_y[0]))
         self.d_b_y = zero_col(len(self.b_y))
 
+        self.d_x = zero_col(self.input_size)
+
 
     def forward(self, x,h,c):
 
@@ -253,6 +255,13 @@ class LSTM:
             d_p_o_t = element_wise_prod_col(d_z_O_t, c_t)
             d_b_o_t = d_z_O_t
 
+            # derivative of loss w.r.t. x_t
+
+            d_x_t = multi_mat_add( (mat_mul(transpose(self.W_fx), d_z_F_t),
+                                    mat_mul(transpose(self.W_ix), d_z_I_t),
+                                    mat_mul(transpose(self.W_gx), d_z_G_t),
+                                    mat_mul(transpose(self.W_ox), d_z_O_t)) )
+
             # update the derivatives for next (previous) timestep
 
             d_z_F_t_plus_1 = d_z_F_t
@@ -285,6 +294,8 @@ class LSTM:
 
             self.d_W_y  = mat_add(self.d_W_y, d_W_y_t)
             self.d_b_y  = col_add(self.d_b_y, d_b_y_t)
+
+            self.d_x  = col_add(self.d_x, d_x_t)
 
         # now that the gradients for the whole sequence have been computed the 
         # logs can be deleted

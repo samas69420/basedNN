@@ -80,4 +80,3 @@ for i,element in enumerate(target_sequence):
 
 # TODO 
 # add save/load weights feature
-# compute and return the gradient also for input
